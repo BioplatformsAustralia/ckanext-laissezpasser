@@ -1,0 +1,14 @@
+# laissezpasser-js:
+#   filter: rjsmin
+#   output: ckanext-laissezpasser/%(version)s-laissezpasser.js
+#   contents:
+#     - js/laissezpasser.js
+#   extra:
+#     preload:
+#       - base/main
+
+# laissezpasser-css:
+#   filter: cssrewrite
+#   output: ckanext-laissezpasser/%(version)s-laissezpasser.css
+#   contents:
+#     - css/laissezpasser.css
