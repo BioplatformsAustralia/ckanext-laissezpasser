@@ -7,12 +7,22 @@ from ckan.common import g
 CONFIG_PASS_DURATION = "ckanext.laissezpasser.duration"
 CONFIG_PASS_DURATION_DEFAULT = "1"
 
+def get_laissezpasser(context: dict[str, Any], data_dict):
+    laissezpasser = LaissezPasser()
+
+    laissezpasser.data_dict = data_dict
+    laissezpasser.context = context
+    return laissezpasser
+
+
 class LaissezPasser():
     def __init__(self):
         self.key = 'laissezpasser'
         self.duration = int(tk.config.get(CONFIG_PASS_DURATION, CONFIG_PASS_DURATION_DEFAULT))
         self.site_user = tk.get_action("get_site_user")({'ignore_auth': True}, {})["name"]
         self.admin_ctx = {"ignore_auth": True, "user": self.site_user }
+        self.context = None
+        self.data_dict = None
         self.clear()
 
     def clear(self):
