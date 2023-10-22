@@ -2,9 +2,8 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
 
+import ckanext.laissezpasser.views as views
 # import ckanext.laissezpasser.cli as cli
-# import ckanext.laissezpasser.helpers as helpers
-# import ckanext.laissezpasser.views as views
 # from ckanext.laissezpasser.logic import (
 #     action, auth, validators
 # )
@@ -12,12 +11,11 @@ import ckan.plugins.toolkit as toolkit
 
 class LaissezpasserPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
+    plugins.implements(plugins.IBlueprint)
     
     # plugins.implements(plugins.IAuthFunctions)
     # plugins.implements(plugins.IActions)
-    # plugins.implements(plugins.IBlueprint)
     # plugins.implements(plugins.IClick)
-    # plugins.implements(plugins.ITemplateHelpers)
     # plugins.implements(plugins.IValidators)
     
 
@@ -41,8 +39,8 @@ class LaissezpasserPlugin(plugins.SingletonPlugin):
 
     # IBlueprint
 
-    # def get_blueprint(self):
-    #     return views.get_blueprints()
+    def get_blueprint(self):
+        return views.get_blueprints()
 
     # IClick
 

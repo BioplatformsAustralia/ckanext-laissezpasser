@@ -1,0 +1,6 @@
+{% ckan_extends %}
+
+{% block content_primary_nav %}
+  {{ super() }}
+    {{ h.build_nav_icon('laissezpasser.pass_index', _('Dataset Access Passes'), target_user=user.name, icon='key') }}
+{% endblock %}
