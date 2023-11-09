@@ -2,6 +2,8 @@ from flask import Blueprint
 from ckan.common import g
 from ckan.lib.base import render, abort, request
 import ckan.logic as logic
+import ckan.plugins.toolkit as toolkit
+
 
 
 laissezpasser = Blueprint(
@@ -20,9 +22,13 @@ def pass_index(target_user):
         if g.userobj.sysadmin is True:
             username = target_user
         else:
-            return h.redirect_to(f"/passes/{username}")
+            return toolkit.redirect_to(f"/passes/{username}")
 
-    user_dict = logic.get_action("user_show")(ctx, {"include_num_followers":True, "include_plugin_extras": True, "id": username})
+    try:
+        user_dict = logic.get_action("user_show")(ctx, {"include_num_followers":True, "include_plugin_extras": True, "id": username})
+    except logic.NotFound:
+        return toolkit.redirect_to(f"/passes/{g.userobj.name}")
+
     return render("laissezpasser/passes.html",extra_vars={ "user_dict": user_dict })
 
 

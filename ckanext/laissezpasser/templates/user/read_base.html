@@ -2,5 +2,7 @@
 
 {% block content_primary_nav %}
   {{ super() }}
+  {% if h.has_passes() or h.check_access('sysadmin') %}
     {{ h.build_nav_icon('laissezpasser.pass_index', _('Dataset Access Passes'), target_user=user.name, icon='key') }}
+  {% endif %}
 {% endblock %}
