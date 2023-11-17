@@ -28,6 +28,9 @@ class LaissezPasser():
     def clear(self):
         self.content = {}
 
+    def count(self):
+        return len(self.content)
+
     def add(self, item: str, passdatetime = None):
         # return True on success of adding pass
         if passdatetime:
@@ -75,14 +78,16 @@ class LaissezPasser():
 
     def _get_user(self):
         # Default to own user
-        username = g.userobj.name
-        # Only admins can see other users passes
-        if g.userobj.name != self.username:
-            if g.userobj.sysadmin is True:
-                username = self.username
+        user_id = g.userobj.id
 
-        user_id = { "id": username, "include_plugin_extras": True }
-        user = tk.get_action('user_show')(self.admin_ctx, user_id)
+        # if data_dict is not None, use user_id from there
+        # otherwise use the global context
+        if self.data_dict:
+            if self.data_dict.get("user_id"):
+                user_id = self.data_dict.get("user_id")
+
+        user_dict = { "id": user_id, "include_plugin_extras": True }
+        user = tk.get_action('user_show')(self.admin_ctx, user_dict)
         return user
 
     def _get_plugin_extras(self, user):

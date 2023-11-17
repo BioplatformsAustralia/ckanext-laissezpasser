@@ -2,6 +2,7 @@
 import ckan.plugins.toolkit as tk
 import ckan.logic.auth as logic_auth
 import ckan.authz as authz
+from ckan.common import g, _
 
 from ckanext.laissezpasser.logic import (
     authpass,
@@ -20,13 +21,22 @@ def laissezpasser_check_package(context, data_dict):
 def laissezpasser_check_resource(context, data_dict):
     return {"success": True}
 
+def _sysadmin_only(context, data_dict):
+    """ Only allowed to sysadmins or organization admins """
+    if not g.userobj:
+        return {'success': False, 'msg': _('Only sysadmins can create or remove passes')}
+
+    if authz.is_sysadmin(g.user):
+        return {'success': True}
+
+    return {"success": False, 'msg': _('Only sysadmins can create or remove passes')}
 
 def laissezpasser_create(context, data_dict):
-    return {"success": True}
+    return _sysadmin_only(context, data_dict)
 
 
 def laissezpasser_remove(context, data_dict):
-    return {"success": True}
+    return _sysadmin_only(context, data_dict)
 
 
 @tk.auth_allow_anonymous_access
