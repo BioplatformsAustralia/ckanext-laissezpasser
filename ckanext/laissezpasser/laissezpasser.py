@@ -98,7 +98,7 @@ class LaissezPasser():
     
     def _get_passes(self, plugin_extras):
         if plugin_extras is not None and self.key in plugin_extras: 
-            return plugin_extras[key]
+            return plugin_extras[self.key]
         else:
             return {}      
 
