@@ -65,7 +65,7 @@ def laissezpasser_create(context, data_dict):
 
     # logic for valid_until
 
-    valid_until = None
+    valid_until = data.get("valid_until",None)
 
     l.add(package_name, valid_until)
 

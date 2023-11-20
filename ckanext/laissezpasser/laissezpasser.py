@@ -34,10 +34,13 @@ class LaissezPasser():
     def add(self, item: str, passdatetime = None):
         # return True on success of adding pass
         if passdatetime:
-           try:
-               passvaliduntil = datetime.datetime.strptime(passdatetime, '%Y-%m-%dT%H:%M:%S.%f')
-           except ValueError:
-               return False
+           if isinstance(passdatetime, datetime.datetime):
+               passvaliduntil = passdatetime
+           else:
+               try:
+                   passvaliduntil = datetime.datetime.strptime(passdatetime, '%Y-%m-%dT%H:%M:%S.%f')
+               except (ValueError, TypeError):
+                   return False
         else:
            stale_after = datetime.timedelta(days=self.duration)
            now = datetime.datetime.utcnow()
