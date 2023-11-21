@@ -67,6 +67,14 @@ class LaissezPasser():
 
         return passdelta < assume_stale_after
 
+    def remove(self, item: str):
+        # Returns True if removed
+        # Returns False otherwise
+        if not self.check(item): return False
+        del self.content[item]
+
+        return True
+
     def restore(self):
         user = self._get_user()
         plugin_extras = self._get_plugin_extras(user)
