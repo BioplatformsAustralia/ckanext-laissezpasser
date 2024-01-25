@@ -36,9 +36,15 @@ def laissezpasser_check_pass(package=None):
     return l.check(package.get("id",None))
 
 
+def laissezpasser_default_duration():
+    l = get_lp()
+
+    return l.duration
+
 def get_helpers():
     return {
         "has_passes": laissezpasser_has_passes,
         "has_package_pass": laissezpasser_has_package_pass,
         "check_pass": laissezpasser_check_pass,
+        "pass_duration": laissezpasser_default_duration,
     }

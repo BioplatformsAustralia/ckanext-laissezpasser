@@ -43,11 +43,13 @@ def laissezpasser_create():
     convert_user_name_or_id_to_id = tk.get_validator("convert_user_name_or_id_to_id")
     convert_package_name_or_id_to_id = tk.get_validator("convert_package_name_or_id_to_id")
     isodate = tk.get_validator("isodate")
+    convert_int = tk.get_validator("convert_int")
 
     return {
         "user_id": [not_empty, text_type, user_id_or_name_exists, convert_user_name_or_id_to_id],
         "package_id": [not_empty, text_type, package_id_or_name_exists, convert_package_name_or_id_to_id],
         "valid_until": [ignore_missing, isodate],
+        "expires_in": [ignore_missing, convert_int],
     }
 
 

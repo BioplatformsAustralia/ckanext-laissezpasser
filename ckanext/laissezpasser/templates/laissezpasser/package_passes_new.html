@@ -1,0 +1,75 @@
+{% extends "package/edit_base.html" %}
+
+{% import 'macros/form.html' as form %}
+
+{% block subtitle %}{{ _('Edit Pass') if user else _('Add Pass') }} - {{ super() }}{% endblock %}
+
+{% block primary_content_inner %}
+  {% link_for _('FIXME Back to all collaborators'), named_route='dataset.collaborators_read', id=pkg_dict.name, class_='btn btn-default pull-right', icon='arrow-left' %}
+  <h1 class="page-heading">
+    {% block page_heading %}{{ _('Edit Pass') if user else _('Add Pass') }}{% endblock %}
+  </h1>
+  {% block form %}
+  <form class="dataset-form add-member-form" method='post'>
+    <div class="row">
+      <div class="col-md-5">
+        <div class="form-group control-medium">
+          {% if not user %}
+            <label class="control-label" for="username">
+              {{ _('Existing User') }}
+            </label>
+            <p>
+              {{ _('If you wish to add a pass for an existing user, search for their username below.') }}
+            </p>
+          {% endif %}
+          <div class="controls">
+            {% if user %}
+              <input type="hidden" name="username" value="{{ user.name }}" />
+              <input id="username" name="username" type="text" value="{{ user.name }}"
+              disabled="True" class="form-control">
+            {% else %}
+                <input id="username" type="text" name="username" placeholder="{{ _('Username') }}"
+              value="" class="control-medium" data-module="autocomplete"
+              data-module-source="/api/2/util/user/autocomplete?q=?">
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% set format_attrs = {'data-module': 'autocomplete'} %}
+
+
+  <div class="form-group ">
+    {{ form.input('expires_in', label=_('Duration of pass in days'), is_required=true, type='number', value=h.pass_duration()) }}
+  </div>
+
+    <div class="form-actions">
+      {% if user %}
+        <a href="{{ h.url_for('laissezpasser.passes_delete', id=pkg_dict.id, user_id=user.name) }}" class="btn btn-danger pull-left" data-module="confirm-action" data-module-content="{{ _('Are you sure you want to delete the pass for this user?') }}">{{ _('Delete') }}</a>
+        <button class="btn btn-primary" type="submit" name="submit" >
+          {{ _('Delete Pass') }}
+        </button>
+      {% else %}
+        <button class="btn btn-primary" type="submit" name="submit" >
+          {{ _('Add Pass') }}
+        </button>
+      {% endif %}
+    </div>
+  </form>
+  {% endblock %}
+{% endblock %}
+
+{% block secondary_content %}
+{{ super() }}
+<div class="module module-narrow module-shallow">
+  <h2 class="module-heading">
+    <i class="fa fa-lg fa-info-circle"></i>
+    {{ _('What is a pass and how long for?') }}
+  </h2>
+  <div class="module-content">
+    {% trans %}
+      <p>FIXME</p>
+    {% endtrans %}
+  </div>
+{% endblock %}

@@ -1,6 +1,7 @@
 import ckan.plugins.toolkit as tk
 import ckanext.laissezpasser.logic.schema as schema
 import ckan.authz as authz
+import datetime
 
 from ckan.common import g
 from ckanext.laissezpasser import laissezpasser
@@ -87,6 +88,7 @@ def laissezpasser_create(context, data_dict):
     #  user_id (string)
     #  package_id (string)
     #  valid_until (iso date string) - (optional)
+    #  expires_in (int) - (optional)
     tk.check_access(
         "laissezpasser_create", context, data_dict)
 
@@ -117,6 +119,13 @@ def laissezpasser_create(context, data_dict):
     )
 
     package_name = package_dict.get("name")
+
+    # logic for expires_in
+    expires_in = data.get("expires_in",None)
+    if expires_in:
+           now = datetime.datetime.utcnow()
+           expires_delta = datetime.timedelta(days=expires_in)
+           data["valid_until"] = now + expires_delta
 
     # logic for valid_until
 
