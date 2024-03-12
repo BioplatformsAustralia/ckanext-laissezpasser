@@ -49,6 +49,15 @@ class LaissezPasser():
         self.content[item] = passvaliduntil.strftime('%Y-%m-%dT%H:%M:%S.%f')
         return True
 
+    def passes(self, valid = True):
+        # Returns a list of packages that have passes
+        # By default, only return the ones that are valid
+
+        if valid:
+           return list(filter(self.valid, self.content.keys()))
+
+        return self.content.keys()
+
     def check(self, item: str):
         # Returns date of pass if present otherwise None
         return self.content.get(item, None)
@@ -96,6 +105,10 @@ class LaissezPasser():
         if self.data_dict:
             if self.data_dict.get("user_id"):
                 user_id = self.data_dict.get("user_id")
+
+        if self.context:
+            if self.context.get("user"):
+                user_id = self.context.get("user")
 
         user_dict = { "id": user_id, "include_plugin_extras": True }
         user = tk.get_action('user_show')(self.admin_ctx, user_dict)

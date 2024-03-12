@@ -94,6 +94,7 @@ def pass_index(target_user):
     ctx = {"ignore_auth": True, "user": site_user }
     # Only admins can view another user's cart
     username = g.userobj.name
+
     if g.userobj.name != target_user:
         if g.userobj.sysadmin is True:
             username = target_user

@@ -1,0 +1,41 @@
+{% set pkg = pkg_dict %}
+
+{% block package_laissezpasser %}
+    {#
+    Tell the user that they have temporary access to this package and its resources
+
+    Note the date
+
+    Note who to contact to extend their access beyond that point in time
+    #}
+
+  {% if pkg %}
+    {% if h.has_package_pass(pkg) %}
+    <div class="clearfix"></div>
+    <div class="alert alert-warning" role="alert">
+      <p>
+      You have been provided with temporary access to this dataset
+      to facilitate your research activities.
+      </p>
+
+      <p>
+      This temporary access to this dataset is 
+      until
+      {{ h.render_datetime(h.check_pass(pkg)) }}.
+      </p>
+
+      <p>
+      If you would like extend access to this dataset
+      beyond this period please contact us
+      <a href="{{ h.url_for('bpatheme.contact_index') }}">here</a>.
+      </p>
+
+      <p>
+      Please collaborate with the project lead directly (see 
+      details in the table below) regards any publication
+      activities based upon this data.
+      </p>
+    </div>
+    {% endif %}
+  {% endif %}
+{% endblock %}
