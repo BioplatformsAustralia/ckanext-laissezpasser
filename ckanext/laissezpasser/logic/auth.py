@@ -42,6 +42,10 @@ def laissezpasser_remove(context, data_dict):
 @tk.auth_allow_anonymous_access
 @tk.chained_auth_function
 def laissezpasser_resource_show(next_auth, context, data_dict=None):
+    # no user, fall through
+    if not g.userobj:
+        return next_auth(context, data_dict)
+
     resource = data_dict.get("resource", context.get("resource", {}))
     if not resource:
         resource = logic_auth.get_resource_object(context, data_dict)
