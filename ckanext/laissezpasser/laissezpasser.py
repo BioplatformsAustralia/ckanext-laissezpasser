@@ -3,6 +3,9 @@ import datetime
 
 import ckan.plugins.toolkit as tk
 from ckan.common import g
+from ckan.model import Package, User
+
+from ckanext.laissezpasser.models.laissezpasser_passes_table import LaissezpasserPassesTable
 
 CONFIG_PASS_DURATION = "ckanext.laissezpasser.duration"
 CONFIG_PASS_DURATION_DEFAULT = "1"
@@ -23,16 +26,20 @@ class LaissezPasser():
         self.admin_ctx = {"ignore_auth": True, "user": self.site_user }
         self.context = None
         self.data_dict = None
-        self.clear()
-
-    def clear(self):
-        self.content = {}
 
     def count(self):
-        return len(self.content)
+        # Returns the number of passes for a user
+        user = self._get_user()
+
+        result = LaissezpasserPassesTable.get_by_user(user)
+        if not result:
+            return 0
+        return len(result)
 
     def add(self, item: str, passdatetime = None):
         # return True on success of adding pass
+        now = datetime.datetime.utcnow()
+
         if passdatetime:
            if isinstance(passdatetime, datetime.datetime):
                passvaliduntil = passdatetime
@@ -43,31 +50,54 @@ class LaissezPasser():
                    return False
         else:
            stale_after = datetime.timedelta(days=self.duration)
-           now = datetime.datetime.utcnow()
            passvaliduntil = now + stale_after
 
-        self.content[item] = passvaliduntil.strftime('%Y-%m-%dT%H:%M:%S.%f')
+        user = self._get_user()
+
+        db_model = LaissezpasserPassesTable(
+            #dataset_name = Package.by_name(item),
+            dataset_name = item,
+            user = User.by_name(user),
+            created_at = now,
+            #created_by = User.by_name(g.userobj.name),
+            created_by = g.userobj.name,
+            valid_until = passvaliduntil,
+        )
+
+        db_model.save()
         return True
 
     def passes(self, valid = True):
         # Returns a list of packages that have passes
         # By default, only return the ones that are valid
 
-        if valid:
-           return list(filter(self.valid, self.content.keys()))
+        user = self._get_user()
 
-        return self.content.keys()
+        result = LaissezpasserPassesTable.get_by_user(user)
+        if not result:
+            return []
+
+        packages = [p.dataset for p in result]
+        if valid:
+           return list(filter(self.valid, packages))
+
+        return packages
 
     def check(self, item: str):
-        # Returns date of pass if present otherwise None
-        return self.content.get(item, None)
+        # Returns datetime of pass if present otherwise None
+        user = self._get_user()
+
+        result = LaissezpasserPassesTable.get_by_package_and_user(item, user)
+        if not result:
+            return None
+        return result[0].valid_until
 
     def valid(self, item: str):
         # Returns True if contains a valid pass
         # Returns False otherwise
         if not self.check(item): return False
         try:
-            timeofpass = datetime.datetime.strptime(self.check(item), '%Y-%m-%dT%H:%M:%S.%f')
+            timeofpass = self.check(item)
         except ValueError:
             return False
         
@@ -80,21 +110,15 @@ class LaissezPasser():
         # Returns True if removed
         # Returns False otherwise
         if not self.check(item): return False
-        del self.content[item]
+
+        user = self._get_user()
+
+        result = LaissezpasserPassesTable.get_by_package_and_user(item, user)
+        for res in result:
+            res.delete()
+            res.commit()
 
         return True
-
-    def restore(self):
-        user = self._get_user()
-        plugin_extras = self._get_plugin_extras(user)
-        self.content = self._get_passes(plugin_extras)
-
-    def save(self):
-        user = self._get_user()
-        plugin_extras = self._get_plugin_extras(user)
-        plugin_extras[self.key] = self.content
-        user['plugin_extras'] = plugin_extras
-        tk.get_action('user_update')(self.admin_ctx, user)
 
     def _get_user(self):
         # Default to own user
@@ -112,20 +136,4 @@ class LaissezPasser():
 
         user_dict = { "id": user_id, "include_plugin_extras": True }
         user = tk.get_action('user_show')(self.admin_ctx, user_dict)
-        return user
-
-    def _get_plugin_extras(self, user):
-        if 'plugin_extras' in user and user.get('plugin_extras') is not None:
-            return user.get('plugin_extras')
-        else:
-            return {}
-    
-    def _get_passes(self, plugin_extras):
-        if plugin_extras is not None and self.key in plugin_extras: 
-            return plugin_extras[self.key]
-        else:
-            return {}      
-
-    def drop(self):
-        self.clear()
-        self.save(key)
+        return user.get('name')

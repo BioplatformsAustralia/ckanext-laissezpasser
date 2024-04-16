@@ -44,7 +44,6 @@ def laissezpasser_check_package(context, data_dict):
     }
 
     l = laissezpasser.get_laissezpasser(None,lp_dict)
-    l.restore()
 
     # get the package and then it's name
     package_id = data.get("package_id")
@@ -109,7 +108,6 @@ def laissezpasser_create(context, data_dict):
     }
 
     l = laissezpasser.get_laissezpasser(None,lp_dict)
-    l.restore()
 
     # get the package and then it's name
     package_id = data.get("package_id")
@@ -132,8 +130,6 @@ def laissezpasser_create(context, data_dict):
     valid_until = data.get("valid_until",None)
 
     l.add(package_name, valid_until)
-
-    l.save()
 
     # return package name and date valid until
     return {
@@ -160,7 +156,6 @@ def laissezpasser_remove(context, data_dict):
     }
 
     l = laissezpasser.get_laissezpasser(None,lp_dict)
-    l.restore()
 
     # get the package and then it's name
     package_id = data.get("package_id")
@@ -172,8 +167,6 @@ def laissezpasser_remove(context, data_dict):
     package_name = package_dict.get("name")
 
     l.remove(package_name)
-
-    l.save()
 
     return {}
 

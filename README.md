@@ -56,6 +56,11 @@ To install ckanext-laissezpasser:
 
      sudo service apache2 reload
 
+5. Create the necessary database tables
+
+     ckan -c /etc/ckan/default/ckan.ini db upgrade -p laissezpasser
+
+
 
 ## Config settings
 

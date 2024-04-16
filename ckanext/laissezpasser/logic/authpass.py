@@ -19,7 +19,6 @@ def laissezpasser_check_user_resource_access(user, resource_dict, package_dict):
     pkg_organization_id = package_dict.get("owner_org", "")
 
     l = laissezpasser.get_laissezpasser(None,None)
-    l.restore()
 
     # if we have a pass
     if l.valid(package_dict.get("id")):

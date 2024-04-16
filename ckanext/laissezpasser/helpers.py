@@ -19,21 +19,18 @@ def get_lp(user = None):
 
 def laissezpasser_has_passes(user = None):
     l = get_lp(user)
-    l.restore()
 
     return True if l.count() else False
 
 
 def laissezpasser_has_package_pass(package=None):
     l = get_lp()
-    l.restore()
 
     return l.valid(package.get("id",None))
 
 
 def laissezpasser_check_pass(package=None):
     l = get_lp()
-    l.restore()
 
     return l.check(package.get("id",None))
 
@@ -46,7 +43,6 @@ def laissezpasser_default_duration():
 
 def laissezpasser_package_passes(user = None):
     l = get_lp(user)
-    l.restore()
 
     package_list = l.passes()
 
