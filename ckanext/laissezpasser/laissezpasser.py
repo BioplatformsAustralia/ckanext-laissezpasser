@@ -38,6 +38,11 @@ class LaissezPasser():
 
     def add(self, item: str, passdatetime = None):
         # return True on success of adding pass
+
+        # remove old pass
+        if self.check(item):
+            self.remove(item)
+
         now = datetime.datetime.utcnow()
 
         if passdatetime:
