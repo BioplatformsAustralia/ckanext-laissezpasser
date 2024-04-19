@@ -27,16 +27,17 @@ class LaissezPasser():
         self.context = None
         self.data_dict = None
 
-    def count(self):
+    def count(self, user = None):
         # Returns the number of passes for a user
-        user = self._get_user()
+        if not user:
+            user = self._get_user()
 
         result = LaissezpasserPassesTable.get_by_user(user)
         if not result:
             return 0
         return len(result)
 
-    def add(self, item: str, passdatetime = None):
+    def add(self, item: str, passdatetime = None, user = None):
         # return True on success of adding pass
 
         # remove old pass
@@ -57,14 +58,13 @@ class LaissezPasser():
            stale_after = datetime.timedelta(days=self.duration)
            passvaliduntil = now + stale_after
 
-        user = self._get_user()
+        if not user:
+            user = self._get_user()
 
         db_model = LaissezpasserPassesTable(
-            #dataset_name = Package.by_name(item),
             dataset_name = item,
             user = User.by_name(user),
             created_at = now,
-            #created_by = User.by_name(g.userobj.name),
             created_by = g.userobj.name,
             valid_until = passvaliduntil,
         )
@@ -72,11 +72,12 @@ class LaissezPasser():
         db_model.save()
         return True
 
-    def passes(self, valid = True):
+    def passes(self, valid = True, user = None):
         # Returns a list of packages that have passes
         # By default, only return the ones that are valid
 
-        user = self._get_user()
+        if not user:
+            user = self._get_user()
 
         result = LaissezpasserPassesTable.get_by_user(user)
         if not result:
@@ -88,21 +89,41 @@ class LaissezPasser():
 
         return packages
 
-    def check(self, item: str):
+    def issued(self, item: str, filter_valid = True):
+        # Returns the metadata for passes associated with a package
+        # By default, only return the ones that are valid
+
+        result = LaissezpasserPassesTable.get_by_package(item)
+
+        if not result:
+            return []
+
+        if filter_valid:
+           log.warn("filtering list")
+           return list(filter(lambda m: self.valid(m.dataset, user=m.user_name), result))
+
+        # unfiltered
+        return result
+
+
+    def check(self, item: str, user = None):
         # Returns datetime of pass if present otherwise None
-        user = self._get_user()
+        if not user:
+            user = self._get_user()
 
         result = LaissezpasserPassesTable.get_by_package_and_user(item, user)
+
         if not result:
             return None
+
         return result[0].valid_until
 
-    def valid(self, item: str):
+    def valid(self, item: str, user = None):
         # Returns True if contains a valid pass
         # Returns False otherwise
-        if not self.check(item): return False
+        if not self.check(item, user=user): return False
         try:
-            timeofpass = self.check(item)
+            timeofpass = self.check(item, user=user)
         except ValueError:
             return False
         
@@ -111,12 +132,13 @@ class LaissezPasser():
 
         return passdelta < assume_stale_after
 
-    def remove(self, item: str):
+    def remove(self, item: str, user = None):
         # Returns True if removed
         # Returns False otherwise
-        if not self.check(item): return False
+        if not self.check(item,user=user): return False
 
-        user = self._get_user()
+        if not user:
+            user = self._get_user()
 
         result = LaissezpasserPassesTable.get_by_package_and_user(item, user)
         for res in result:
