@@ -2,8 +2,10 @@
 
 import ckan.model as model
 from ckan.lib.dictization import model_dictize
+import ckan.lib.dictization as d
 from ckan.common import g
 from ckanext.laissezpasser import laissezpasser
+from ckanext.laissezpasser.models.laissezpasser_passes_table import LaissezpasserPassesTable
 
 from logging import getLogger
 
@@ -48,7 +50,28 @@ def laissezpasser_package_passes(user = None):
 
     context = {"model": model, "session": model.Session}
 
-    return [model_dictize.package_dictize(model.Session.query(model.Package).get(pkg_name), context) for pkg_name in package_list]
+    passes_as_dicts =  [model_dictize.package_dictize(model.Session.query(model.Package).get(pkg_name), context) for pkg_name in package_list]
+
+    # run through list, add valid flag
+    passes_as_dicts = [dict(passes,**{'valid': l.valid(passes.get('dataset'),passes.get('user_name'))}) for passes in passes_as_dicts]
+
+    return passes_as_dicts
+
+
+def laissezpasser_issued_passes(package = None, filter_valid=False):
+    l = get_lp()
+
+    metadata_list = l.issued(package, filter_valid = filter_valid)
+
+    context = {"model": model, "session": model.Session}
+
+    issued_as_dicts = [d.table_dictize(LaissezpasserPassesTable.get_by_package_and_user(metadata.dataset, metadata.user_name)[0], context) for metadata in metadata_list]
+
+    # run through list, add valid flag
+    issued_as_dicts = [dict(issued,**{'valid': l.valid(issued.get('dataset'),issued.get('user_name'))}) for issued in issued_as_dicts]
+
+    return issued_as_dicts
+
 
 def get_helpers():
     return {
@@ -57,4 +80,5 @@ def get_helpers():
         "check_pass": laissezpasser_check_pass,
         "pass_duration": laissezpasser_default_duration,
         "package_passes": laissezpasser_package_passes,
+        "issued_passes": laissezpasser_issued_passes,
     }
