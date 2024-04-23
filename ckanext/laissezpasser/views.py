@@ -83,7 +83,7 @@ class LaissezPasserEditView(MethodView):
         }
 
         return render(
-            u'laissezpasser/package_passes_new.html', extra_vars)
+            u'ckanext_laissezpasser/package_passes_new.html', extra_vars)
 
 
 def pass_index(target_user):
@@ -106,7 +106,7 @@ def pass_index(target_user):
     except logic.NotFound:
         return toolkit.redirect_to(f"/passes/{g.userobj.name}")
 
-    return render("laissezpasser/passes.html",extra_vars={ "user_dict": user_dict })
+    return render("ckanext_laissezpasser/passes.html",extra_vars={ "user_dict": user_dict })
 
 #FIXME 
 def passes_read(id):
