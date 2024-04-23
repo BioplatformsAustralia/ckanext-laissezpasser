@@ -5,10 +5,23 @@
 {% block subtitle %}{{ _('Edit Pass') if user else _('Add Pass') }} - {{ super() }}{% endblock %}
 
 {% block primary_content_inner %}
-  {% link_for _('FIXME Back to all collaborators'), named_route='dataset.collaborators_read', id=pkg_dict.name, class_='btn btn-default pull-right', icon='arrow-left' %}
+  {% link_for _('Back to Manage'), named_route=pkg.type ~ '.edit', id=pkg.name, class_='btn btn-default pull-right', icon='arrow-left' %}
   <h1 class="page-heading">
     {% block page_heading %}{{ _('Edit Pass') if user else _('Add Pass') }}{% endblock %}
   </h1>
+
+  <p>
+  List of existing passes here????
+  </p>
+  <h4>Valid</h4>
+  <p>
+  {{ h.issued_passes(pkg.name, filter_valid=True) }}
+  </p>
+  <p>
+  <h4>Not Valid</h4>
+  {{ h.issued_passes(pkg.name, filter_valid=False) }}
+  </p>
+
   {% block form %}
   <form class="dataset-form add-member-form" method='post'>
     <div class="row">
