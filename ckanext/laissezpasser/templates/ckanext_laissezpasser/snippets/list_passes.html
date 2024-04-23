@@ -1,0 +1,46 @@
+<section class="dataset-access-passes">
+  <h3>{{ _('Additional Info') }}
+  {% snippet 'ckanext_laissezpasser/snippets/valid_pass_toggle.html', url=url %}
+  </h3>
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        {% if key == 'dataset' %}
+          <th scope="col">{{ _('Package') }}</th>
+        {% else %}
+          <th scope="col" colspan=2>{{ _('User') }}</th>
+        {% endif %}
+        <th scope="col">{{ _('Valid Until') }}</th>
+        <th scope="col">{{ _('Created by') }}</th>
+        <th scope="col">{{ _('Created at') }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% block dataset_access_passes %}
+        {% for pass in passes %}
+          {%- if pass.valid or session['show_invalid_passes'] == 'True' -%}
+          {%- if not pass.valid -%}
+          {% set extraclass = "warning" %}
+          {%- else -%}
+          {% set extraclass = "" %}
+          {%- endif -%}
+            {% if key == 'dataset' %}
+              <td class="dataset-details {{ extraclass }}">{{ pass.dataset }}</td>
+            {% else %}
+              <td class="dataset-details {{ extraclass }}" property="dc:contributor">{{ pass.user_name }}</td>
+              <td class="dataset-details {{ extraclass }}" property="dc:contributor">{{ h.linked_user(pass.user_name) }}</td>
+            {% endif %}
+              <td class="dataset-details {{ extraclass }}">
+                  {% snippet 'snippets/local_friendly_datetime.html', datetime_obj=pass.valid_until %}
+              </td>
+              <td class="dataset-details {{ extraclass }}" property="dc:contributor">{{ pass.created_by }}</td>
+              <td class="dataset-details {{ extraclass }}">
+                  {% snippet 'snippets/local_friendly_datetime.html', datetime_obj=pass.created_at %}
+              </td>
+          </tr>
+          {%- endif -%}
+        {% endfor %}
+      {% endblock %}
+    </tbody>
+  </table>
+</section>

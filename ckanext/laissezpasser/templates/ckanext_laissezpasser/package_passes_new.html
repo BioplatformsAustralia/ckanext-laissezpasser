@@ -10,17 +10,9 @@
     {% block page_heading %}{{ _('Edit Pass') if user else _('Add Pass') }}{% endblock %}
   </h1>
 
-  <p>
-  List of existing passes here????
-  </p>
-  <h4>Valid</h4>
-  <p>
-  {{ h.issued_passes(pkg.name, filter_valid=True) }}
-  </p>
-  <p>
-  <h4>Not Valid</h4>
-  {{ h.issued_passes(pkg.name, filter_valid=False) }}
-  </p>
+  {% set url = h.url_for('laissezpasser.new_laissezpasser', id=pkg.name) %}
+
+  {% snippet 'ckanext_laissezpasser/snippets/list_passes.html', passes=h.issued_passes(pkg.name, filter_valid=False), url=url %}
 
   {% block form %}
   <form class="dataset-form add-member-form" method='post'>

@@ -1,0 +1,19 @@
+
+
+     {% if request.environ.QUERY_STRING == 'toggle_invalid_passes' %}
+     {%- if 'show_invalid_passes' in session: -%}
+        {% if session['show_invalid_passes'] == "False" %}
+            {% set _ = session.update({"show_invalid_passes": "True"}) %}
+        {% else %}
+            {% set _ = session.update({"show_invalid_passes": "False"}) %}
+        {% endif %}
+    {%- else -%}
+        {% set _ = session.update({"show_invalid_passes": "True"}) %}
+    {%- endif -%}
+    {% endif %}
+    {% set _ = session.save() %}
+
+ <a class="btn btn-primary" style="float:right" href="{{ url }}?toggle_invalid_passes">
+     {% if not session['show_invalid_passes'] == "True" %}Show{% else %}Hide{% endif %} Expired Passes</a>
+
+
