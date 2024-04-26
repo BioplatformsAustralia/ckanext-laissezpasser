@@ -10,7 +10,14 @@
   </h2>
   {% block package_list %}
   {% if h.has_passes(user.name) %}
-    {% snippet 'snippets/package_list.html', packages=h.package_passes(user.name) %}
+    {# render differently if a sysadmin #}
+    {% if h.check_access('sysadmin') %}
+      <p>This summary of passes held by user (showing valid and expired) is only available to system administrators</p>
+      {% set url = h.url_for('laissezpasser.pass_index', target_user=user.name) %}
+      {% snippet 'ckanext_laissezpasser/snippets/list_passes.html', passes=h.held_passes(user.name, filter_valid=False), url=url, key='dataset' %}
+    {% else %}
+      {% snippet 'snippets/package_list.html', packages=h.package_passes(user.name) %}
+    {% endif %}
   {% else %}
     {% if is_myself %}
       <p class="empty">

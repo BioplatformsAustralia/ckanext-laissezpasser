@@ -1,0 +1,8 @@
+{% extends 'package/base.html' %}
+
+{% block content_primary_nav %}
+    {{ super() }}
+    {% if h.check_access('sysadmin') %}
+        {{ h.build_nav_icon('laissezpasser.new_laissezpasser', _('Dataset Access Passes'), id=pkg.name, icon='users')}}
+    {% endif %}
+{% endblock %}

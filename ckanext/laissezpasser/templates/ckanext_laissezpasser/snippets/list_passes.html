@@ -1,5 +1,5 @@
 <section class="dataset-access-passes">
-  <h3>{{ _('Additional Info') }}
+  <h3>{{ _('Passes') }}
   {% snippet 'ckanext_laissezpasser/snippets/valid_pass_toggle.html', url=url %}
   </h3>
   <table class="table table-bordered table-condensed">
@@ -25,9 +25,15 @@
           {% set extraclass = "" %}
           {%- endif -%}
             {% if key == 'dataset' %}
-              <td class="dataset-details {{ extraclass }}">{{ pass.dataset }}</td>
+              <td class="dataset-details {{ extraclass }}">
+               <a href="{{ h.url_for('laissezpasser.new_laissezpasser', id=pass.dataset) }}">{{ pass.dataset }}</a>
+              </td>
             {% else %}
-              <td class="dataset-details {{ extraclass }}" property="dc:contributor">{{ pass.user_name }}</td>
+              <td class="dataset-details {{ extraclass }}" property="dc:contributor">
+              <a href="{{ h.url_for('laissezpasser.pass_index', target_user=pass.user_name) }}">
+              {{ pass.user_name }}
+              </a>
+              </td>
               <td class="dataset-details {{ extraclass }}" property="dc:contributor">{{ h.linked_user(pass.user_name) }}</td>
             {% endif %}
               <td class="dataset-details {{ extraclass }}">

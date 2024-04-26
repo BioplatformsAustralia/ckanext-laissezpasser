@@ -89,6 +89,26 @@ class LaissezPasser():
 
         return packages
 
+
+    def held(self, user = None, filter_valid = True):
+        # Returns the metadata for passes held by a user
+        # By default, only return the ones that are valid
+
+        if not user:
+            user = self._get_user()
+
+        result = LaissezpasserPassesTable.get_by_user(user)
+        if not result:
+            return []
+
+        if filter_valid:
+           log.warn("filtering list")
+           return list(filter(lambda m: self.valid(m.dataset, user=m.user_name), result))
+
+        # unfiltered
+        return result
+
+
     def issued(self, item: str, filter_valid = True):
         # Returns the metadata for passes associated with a package
         # By default, only return the ones that are valid
