@@ -4,7 +4,7 @@ from ckanext.laissezpasser import laissezpasser
 
 class TestLaissezPasser:
     def test_restore(self, laissezpasser):
-        # check no passes 
+        # check no passes
         laissezpasser.restore()
         assert not laissezpasser
 
@@ -20,15 +20,14 @@ class TestLaissezPasser:
         laissezpasser.restore()
         assert laissezpasser
 
-
     def test_check(self, laissezpasser):
-        # check no passes 
+        # check no passes
         laissezpasser.clear()
         assert not laissezpasser
 
         # check no pass for hello
         assert not laissezpasser.check("hello")
-        
+
         # add pass
         laissezpasser.add("hello")
 
@@ -40,15 +39,14 @@ class TestLaissezPasser:
         laissezpasser.clear()
         assert not laissezpasser.check("hello")
 
-
     def test_valid(self, laissezpasser):
-        # check no passes 
+        # check no passes
         laissezpasser.clear()
         assert not laissezpasser
 
         # check no pass for hello
         assert not laissezpasser.check("hello")
-        
+
         # check no valid pass for hello
         assert not laissezpasser.valid("hello")
 

@@ -4,10 +4,9 @@ import ckan.plugins.toolkit as toolkit
 
 import ckanext.laissezpasser.helpers as helpers
 import ckanext.laissezpasser.views as views
+
 # import ckanext.laissezpasser.cli as cli
-from ckanext.laissezpasser.logic import (
-    action, auth, validators
-)
+from ckanext.laissezpasser.logic import action, auth, validators
 
 
 class LaissezpasserPlugin(plugins.SingletonPlugin):
@@ -16,10 +15,9 @@ class LaissezpasserPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IBlueprint)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IAuthFunctions)
-    
+
     # plugins.implements(plugins.IClick)
     # plugins.implements(plugins.IValidators)
-    
 
     # IConfigurer
 
@@ -28,7 +26,6 @@ class LaissezpasserPlugin(plugins.SingletonPlugin):
         toolkit.add_public_directory(config_, "public")
         toolkit.add_resource("assets", "laissezpasser")
 
-    
     # IAuthFunctions
 
     def get_auth_functions(self):
@@ -58,4 +55,3 @@ class LaissezpasserPlugin(plugins.SingletonPlugin):
 
     # def get_validators(self):
     #     return validators.get_validators()
-    

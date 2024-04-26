@@ -12,6 +12,7 @@ from logging import getLogger
 
 log = getLogger(__name__)
 
+
 @tk.auth_allow_anonymous_access
 def laissezpasser_check_package(context, data_dict):
     return {"success": True}
@@ -21,15 +22,20 @@ def laissezpasser_check_package(context, data_dict):
 def laissezpasser_check_resource(context, data_dict):
     return {"success": True}
 
+
 def _sysadmin_only(context, data_dict):
     """ Only allowed to sysadmins or organization admins """
     if not g.userobj:
-        return {'success': False, 'msg': _('Only sysadmins can create or remove passes')}
+        return {
+            "success": False,
+            "msg": _("Only sysadmins can create or remove passes"),
+        }
 
     if authz.is_sysadmin(g.user):
-        return {'success': True}
+        return {"success": True}
 
-    return {"success": False, 'msg': _('Only sysadmins can create or remove passes')}
+    return {"success": False, "msg": _("Only sysadmins can create or remove passes")}
+
 
 def laissezpasser_create(context, data_dict):
     return _sysadmin_only(context, data_dict)
@@ -60,7 +66,9 @@ def laissezpasser_resource_show(next_auth, context, data_dict=None):
         package = model.Package.get(resource.get("package_id"))
         package = package.as_dict()
 
-    check_pass = authpass.laissezpasser_check_user_resource_access(user_name, resource, package)
+    check_pass = authpass.laissezpasser_check_user_resource_access(
+        user_name, resource, package
+    )
 
     # if we have a pass return that result
     if check_pass:
@@ -77,10 +85,12 @@ def get_auth_functions():
         "laissezpasser_create": laissezpasser_create,
         "laissezpasser_remove": laissezpasser_create,
         "resource_show": laissezpasser_resource_show,
-        "resource_view_show": laissezpasser_resource_show
+        "resource_view_show": laissezpasser_resource_show,
     }
 
+
 # internal functions
+
 
 def _get_username_from_context(context):
     auth_user_obj = context.get("auth_user_obj", None)
@@ -91,4 +101,3 @@ def _get_username_from_context(context):
         if authz.get_user_id_for_username(context.get("user"), allow_none=True):
             user_name = context.get("user", "")
     return user_name
-
