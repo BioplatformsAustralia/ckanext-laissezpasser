@@ -2,32 +2,40 @@
 
 # ckanext-laissezpasser
 
-**TODO:** Put a description of your extension here:  What does it do? What features does it have? Consider including some screenshots or embedding a video!
+This extension expands on the flexible resource permissioning provided by 
+ckanext-initiatives
+https://github.com/BioplatformsAustralia/ckanext-initiatives.
+It enables systems administrators to be able to provide time limited 
+access to particular users to download specific datasets irrespective 
+of if they are members of the relevant project.
 
+The extension intercepts the same authentication calls as 
+ckanext-initiatives and is implemented as a chained auth function.
+
+A frontend and API calls are implmented to view, add and remove passes.
+
+The name of the extension is derived from the French
+
+    laissez-passer
+
+    noun
+
+    a permit; pass, especially one issued in lieu of a passport.
 
 ## Requirements
-
-**TODO:** For example, you might want to mention here which versions of CKAN this
-extension works with.
-
-If your extension works across different versions you can add the following table:
 
 Compatibility with core CKAN versions:
 
 | CKAN version    | Compatible?   |
 | --------------- | ------------- |
-| 2.6 and earlier | not tested    |
-| 2.7             | not tested    |
-| 2.8             | not tested    |
-| 2.9             | not tested    |
+| 2.8 and earlier | not tested    |
+| 2.9             | yes           |
+| 2.10            | not yet       |
+| 2.11            | not yet       |
 
-Suggested values:
+It is strongly suggested to use this extension with
 
-* "yes"
-* "not tested" - I can't think of a reason why it wouldn't work
-* "not yet" - there is an intention to get it working
-* "no"
-
+https://github.com/BioplatformsAustralia/ckanext-initiatives
 
 ## Installation
 
