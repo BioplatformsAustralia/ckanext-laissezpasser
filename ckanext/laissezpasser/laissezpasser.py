@@ -92,9 +92,12 @@ class LaissezPasser:
         if not result:
             return []
 
-        packages = [p.dataset for p in result]
         if valid:
-            return list(filter(self.valid, packages))
+            result = list(
+                filter(lambda m: self.valid(m.dataset, user=m.user_name), result)
+            )
+
+        packages = [p.dataset for p in result]
 
         return packages
 
