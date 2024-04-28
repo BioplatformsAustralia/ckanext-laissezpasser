@@ -156,10 +156,9 @@ class LaissezPasser:
         except ValueError:
             return False
 
-        assume_stale_after = datetime.timedelta(days=self.duration)
-        passdelta = datetime.datetime.utcnow() - timeofpass
+        now = datetime.datetime.utcnow()
 
-        return passdelta < assume_stale_after
+        return timeofpass > now
 
     def remove(self, item: str, user=None):
         # Returns True if removed
