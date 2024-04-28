@@ -16,11 +16,13 @@ A frontend and API calls are implmented to view, add and remove passes.
 
 The name of the extension is derived from the French
 
+```
     laissez-passer
 
     noun
 
     a permit; pass, especially one issued in lieu of a passport.
+```
 
 ## Requirements
 
@@ -38,10 +40,6 @@ It is strongly suggested to use this extension with
 https://github.com/BioplatformsAustralia/ckanext-initiatives
 
 ## Installation
-
-**TODO:** Add any additional install steps to the list below.
-   For example installing any non-Python dependencies or adding any required
-   config settings.
 
 To install ckanext-laissezpasser:
 
@@ -72,14 +70,25 @@ To install ckanext-laissezpasser:
 
 ## Config settings
 
-None at present
+ckanext-laissezpasser has minimal configuration.   The default length of 
+time in days for a pass can be set in the CKAN configuration file
 
-**TODO:** Document any optional config settings here. For example:
+```
+	# The number of days for a new pass to be valid
+	# (optional, default: 7).
+        ckanext.laissezpasser.duration = 1
+```
 
-	# The minimum number of hours to wait before re-checking a resource
-	# (optional, default: 24).
-	ckanext.laissezpasser.some_setting = some_default_value
+To enable the plugin, the CKAN configuration file plugins setting needs
+to be updated
 
+```
+ckan.plugins = .. laissezpasser ... initiatives
+```
+
+It must be listed in the configuration file before the initiatives 
+extension and any other similar extensions that use/override auth
+functions or chained auth functions.
 
 ## Developer installation
 

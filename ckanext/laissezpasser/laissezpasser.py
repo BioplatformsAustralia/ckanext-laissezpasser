@@ -10,7 +10,7 @@ from ckanext.laissezpasser.models.laissezpasser_passes_table import (
 )
 
 CONFIG_PASS_DURATION = "ckanext.laissezpasser.duration"
-CONFIG_PASS_DURATION_DEFAULT = "1"
+CONFIG_PASS_DURATION_DEFAULT = "7"
 
 
 def get_laissezpasser(context: dict[str, Any], data_dict):
