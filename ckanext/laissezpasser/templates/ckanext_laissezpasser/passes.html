@@ -16,10 +16,21 @@
       {% set url = h.url_for('laissezpasser.pass_index', target_user=user.name) %}
       {% snippet 'ckanext_laissezpasser/snippets/list_passes.html', passes=h.held_passes(user.name, filter_valid=False), url=url, key='dataset' %}
     {% else %}
-      {% snippet 'snippets/package_list.html', packages=h.package_passes(user.name) %}
+      <p>
+      A Dataset Access Pass provides you temporary access to a dataset, it's metadata and attached resources.  
+      </p>
+      <p>
+      A Dataset Access Pass is only valid for a limited time and only valid passes are displayed below.  When
+      you view the dataset, the time of expiry will be shown.   If none are listed below, all previous 
+      passes have now expired.
+      </p>
+      {% snippet 'snippets/package_list.html', packages=h.package_passes(user.name, filter_valid=True) %}
     {% endif %}
   {% else %}
     {% if is_myself %}
+      <p>
+      A Dataset Access Pass provides you temporary access to a dataset, it's metadata and attached resources.  
+      </p>
       <p class="empty">
         {{ _('You do not have any passes to access datasets.') }}
       </p>
