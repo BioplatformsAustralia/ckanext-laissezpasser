@@ -110,10 +110,8 @@ def pass_index(target_user):
     )
 
 
-# FIXME
 def passes_read(id):
-    # FIXME
-    return pass_index(g.userobj.id)
+    return h.redirect_to("laissezpasser.new_laissezpasser", id=id)
 
 
 # FIXME
