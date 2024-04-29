@@ -74,7 +74,21 @@
   </h2>
   <div class="module-content">
     {% trans %}
-      <p>FIXME</p>
+      <p>
+      A Dataset Access Pass provides temporary access to a dataset, it's metadata and attached resources for a user.
+      </p>
+      <p>
+      A Dataset Access Pass is for a single dataset and is only valid for a limited time.   Valid passes
+      for this dataset are displayed to the right.  A toggle is provided to also show expired passes if
+      that information is required.
+      </p>
+      <p>
+      When the user views the dataset, the time of expiry will be shown.
+      </p>
+      <p>
+      To add a pass, you will need to know the CKAN username for the user.
+      It is recommended to go with the default duration in days for the pass to be added.
+      </p>
     {% endtrans %}
   </div>
 {% endblock %}
