@@ -13,6 +13,7 @@
         <th scope="col">{{ _('Valid Until') }}</th>
         <th scope="col">{{ _('Created by') }}</th>
         <th scope="col">{{ _('Created at') }}</th>
+        <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
@@ -43,6 +44,12 @@
               <td class="dataset-details {{ extraclass }}">
                   {% snippet 'snippets/local_friendly_datetime.html', datetime_obj=pass.created_at %}
               </td>
+              <td>
+                <div class="btn-group pull-right">
+                  <a class="btn btn-danger btn-sm" href="{{ h.url_for('laissezpasser.passes_expire', id=pass.dataset, user_id=pass.user_name) }}" data-module="confirm-action" data-module-content="{{ _('Are you sure you want to expire the pass for this user?') }}" title="{{ _('Expire') }}">{% block expire_button_text %}<i class="fa fa-times"></i>{% endblock %}</a>
+                </div>
+              </td>
+
           </tr>
           {%- endif -%}
         {% endfor %}

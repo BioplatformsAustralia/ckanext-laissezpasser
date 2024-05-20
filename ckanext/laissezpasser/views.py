@@ -3,6 +3,7 @@ from flask.views import MethodView
 from ckan.common import _, g
 from ckan.lib.base import render, abort, request
 from ckan.logic import get_action, ValidationError, NotFound, NotAuthorized
+import datetime
 import ckan.authz as authz
 import ckan.logic as logic
 import ckan.model as model
@@ -13,10 +14,9 @@ import ckan.lib.navl.dictization_functions as dict_fns
 
 laissezpasser = Blueprint("laissezpasser", __name__)
 
-# FIXME
+
 class LaissezPasserEditView(MethodView):
     def post(self, id):
-        # FIXME model
         context = {"model": model, "user": g.user}
 
         try:
@@ -114,7 +114,43 @@ def passes_read(id):
     return h.redirect_to("laissezpasser.new_laissezpasser", id=id)
 
 
-# FIXME
+def passes_expire(id, user_id):
+    context = {"model": model, "user": g.user}
+
+    try:
+        form_dict = logic.clean_dict(
+            dict_fns.unflatten(logic.tuplize_dict(logic.parse_params(request.form)))
+        )
+
+        # This should set the pass to now explicitly expiring
+        now = datetime.datetime.utcnow()
+
+        data_dict = {
+            "package_id": id,
+            "user_id": user_id,
+            "valid_until": now,
+        }
+
+        # this will overwrite the existing pass for the user
+        get_action("laissezpasser_create")(context, data_dict)
+
+    except dict_fns.DataError:
+        return abort(400, _("Integrity Error"))
+    except NotAuthorized:
+        message = _("Unauthorized to create pass {}").format(id)
+        return abort(401, _(message))
+    except NotFound as e:
+        h.flash_error(_("User not found"))
+        return h.redirect_to("laissezpasser.new_laissezpasser", id=id)
+    except ValidationError as e:
+        h.flash_error(e.error_summary)
+        return h.redirect_to("laissezpasser.new_laissezpasser", id=id)
+    else:
+        h.flash_success(_("Pass expired"))
+
+    return h.redirect_to("laissezpasser.passes_read", id=id)
+
+
 def passes_delete(id, user_id):
     context = {"model": model, "user": g.user}
 
@@ -167,6 +203,14 @@ laissezpasser.add_url_rule(
 laissezpasser.add_url_rule(
     rule="/<id>/passes/delete/<user_id>",
     view_func=passes_delete,
+    methods=[
+        "POST",
+    ],
+)
+
+laissezpasser.add_url_rule(
+    rule="/<id>/passes/expire/<user_id>",
+    view_func=passes_expire,
     methods=[
         "POST",
     ],
