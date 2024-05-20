@@ -37,7 +37,7 @@ class LaissezPasserEditView(MethodView):
         except dict_fns.DataError:
             return abort(400, _("Integrity Error"))
         except NotAuthorized:
-            message = _("Unauthorized to create pases {}").format(id)
+            message = _("Unauthorized to create pass {}").format(id)
             return abort(401, _(message))
         except NotFound as e:
             h.flash_error(_("User not found"))
