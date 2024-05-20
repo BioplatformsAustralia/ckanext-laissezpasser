@@ -116,8 +116,33 @@ def passes_read(id):
 
 # FIXME
 def passes_delete(id, user_id):
-    # FIXME
-    return pass_index(g.userobj.id)
+    context = {"model": model, "user": g.user}
+
+    try:
+        form_dict = logic.clean_dict(
+            dict_fns.unflatten(logic.tuplize_dict(logic.parse_params(request.form)))
+        )
+
+        data_dict = {
+            "package_id": id,
+            "user_id": user_id,
+        }
+
+        get_action("laissezpasser_remove")(context, data_dict)
+
+    except dict_fns.DataError:
+        return abort(400, _("Integrity Error"))
+    except NotAuthorized:
+        message = _("Unauthorized to delete pass {}").format(id)
+        return abort(401, _(message))
+    except NotFound as e:
+        h.flash_error(_("User not found"))
+    except ValidationError as e:
+        h.flash_error(e.error_summary)
+    else:
+        h.flash_success(_("Pass deleted"))
+
+    return h.redirect_to("laissezpasser.passes_read", id=id)
 
 
 laissezpasser.add_url_rule("/passes/<target_user>", view_func=pass_index)
