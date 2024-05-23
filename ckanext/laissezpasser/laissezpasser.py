@@ -142,6 +142,10 @@ class LaissezPasser:
         if not user:
             user = self._get_user()
 
+        # no user, so no pass
+        if not user:
+            return None
+
         result = LaissezpasserPassesTable.get_by_package_and_user(item, user)
 
         if not result:
@@ -180,8 +184,11 @@ class LaissezPasser:
         return True
 
     def _get_user(self):
+        user_id = None
+
         # Default to own user
-        user_id = g.userobj.id
+        if g.userobj:
+            user_id = g.userobj.id
 
         # if data_dict is not None, use user_id from there
         # otherwise use the global context
@@ -192,6 +199,9 @@ class LaissezPasser:
         if self.context:
             if self.context.get("user"):
                 user_id = self.context.get("user")
+
+        if user_id is None:
+            return None
 
         user_dict = {"id": user_id, "include_plugin_extras": True}
         user = tk.get_action("user_show")(self.admin_ctx, user_dict)
