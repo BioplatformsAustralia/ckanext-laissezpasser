@@ -64,7 +64,7 @@ class LaissezPasserEditView(MethodView):
         except NotFound:
             return abort(404, _("Resource not found"))
 
-        user = request.params.get("user_id")
+        user = request.args.get("user_id")
         user_capacity = "member"
 
         if user:
