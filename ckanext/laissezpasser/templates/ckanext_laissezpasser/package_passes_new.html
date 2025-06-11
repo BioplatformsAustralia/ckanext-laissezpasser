@@ -15,6 +15,7 @@
   {% snippet 'ckanext_laissezpasser/snippets/list_passes.html', passes=h.issued_passes(pkg.name, filter_valid=False), url=url %}
 
   {% block form %}
+  {{ h.csrf_input() if 'csrf_input' in h }}
   <form class="dataset-form add-member-form" method='post'>
     <div class="row">
       <div class="col-md-5">
