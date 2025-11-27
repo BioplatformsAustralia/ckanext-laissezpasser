@@ -1,0 +1,12 @@
+# schema version of the config declaration. At the moment, the only valid value is `1`
+version: 1
+- annotation: ckanext-laissezpasser settings
+  options:
+    - key: ckanext.laissezpasser.duration
+      default: 7
+      description: |
+          This configuration item sets the number of calendar days
+          that a temporary access pass created using the
+          ckanext-laissezpasser extension lasts
+      validators: int_validator
+      required: false
