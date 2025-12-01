@@ -32,7 +32,7 @@ Compatibility with core CKAN versions:
 | --------------- | ------------- |
 | 2.8 and earlier | not tested    |
 | 2.9             | yes           |
-| 2.10            | not yet       |
+| 2.10            | yes           |
 | 2.11            | not yet       |
 
 It is strongly suggested to use this extension with
